@@ -37,6 +37,13 @@ Preferred communication style: Simple, everyday language.
 - Improved logging to show which reminders are being processed
 - Enhanced efficiency by reducing unnecessary server processing
 
+### Timezone Issue Resolution (July 12, 2025)
+- Fixed timezone issues where dates were showing incorrectly (e.g., July 13 showing as July 14)
+- Updated all date parsing to use local date construction instead of UTC conversion
+- Modified date handling in person-card, reminder-card, person-profile, and cron job components
+- Ensured consistent date formatting across frontend and backend without timezone shifts
+- Dates now display correctly in user's local timezone (New Zealand, US, etc.)
+
 ## System Architecture
 
 ### Frontend Architecture

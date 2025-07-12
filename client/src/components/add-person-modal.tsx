@@ -76,7 +76,7 @@ export function AddPersonModal({ open, onOpenChange }: AddPersonModalProps) {
         fullName: data.fullName,
         relationship: data.relationship,
         birthDate: data.birthDay && data.birthMonth ? 
-          `${new Date().getFullYear()}-${data.birthMonth.toString().padStart(2, '0')}-${data.birthDay.toString().padStart(2, '0')}` : 
+          `${data.birthYear || 2000}-${data.birthMonth.toString().padStart(2, '0')}-${data.birthDay.toString().padStart(2, '0')}` : 
           undefined,
         birthYear: data.birthYear,
         notes: data.notes,

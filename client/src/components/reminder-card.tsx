@@ -101,7 +101,9 @@ export function ReminderCard({ reminder, priority = 'medium' }: ReminderCardProp
 
   const getDaysUntil = () => {
     const today = new Date();
-    const reminderDate = new Date(reminder.reminderDate);
+    // Parse reminder date as local date to avoid timezone issues
+    const [year, month, day] = reminder.reminderDate.split('-').map(Number);
+    const reminderDate = new Date(year, month - 1, day);
     const diffTime = reminderDate.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
@@ -119,7 +121,10 @@ export function ReminderCard({ reminder, priority = 'medium' }: ReminderCardProp
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    // Parse date string as local date to avoid timezone issues
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
+    return date.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric'

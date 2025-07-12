@@ -29,7 +29,9 @@ export function PersonCard({ person }: PersonCardProps) {
   };
 
   const formatBirthDate = (dateString: string) => {
-    const date = new Date(dateString);
+    // Parse the date string as local date to avoid timezone issues
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day); // month is 0-indexed
     return date.toLocaleDateString('en-US', {
       month: 'long',
       day: 'numeric'
@@ -43,7 +45,9 @@ export function PersonCard({ person }: PersonCardProps) {
 
     const nextReminder = person.upcomingReminders[0];
     const today = new Date();
-    const reminderDate = new Date(nextReminder.reminderDate);
+    // Parse reminder date as local date to avoid timezone issues
+    const [year, month, day] = nextReminder.reminderDate.split('-').map(Number);
+    const reminderDate = new Date(year, month - 1, day);
     const diffTime = reminderDate.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 

@@ -30,7 +30,9 @@ class CronJobService {
         const user = await storage.getUser(reminder.userId);
         if (!user) continue;
         
-        const reminderDate = new Date(reminder.reminderDate);
+        // Parse reminder date as local date to avoid timezone issues
+        const [year, month, day] = reminder.reminderDate.split('-').map(Number);
+        const reminderDate = new Date(year, month - 1, day);
         let shouldSend = false;
         let emailType = '';
         
