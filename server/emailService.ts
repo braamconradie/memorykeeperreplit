@@ -45,6 +45,35 @@ class EmailService {
       const subject = this.generateSubject(reminder);
       const body = this.generateBody(user, reminder);
 
+      // Check if SMTP is configured
+      const hasSmtpConfig = process.env.SMTP_USER && process.env.SMTP_PASS;
+      
+      if (!hasSmtpConfig) {
+        console.log('\n' + '='.repeat(60));
+        console.log('📧 EMAIL DEBUG MODE - No SMTP configured');
+        console.log('='.repeat(60));
+        console.log(`To: ${emailAddresses.join(', ')}`);
+        console.log(`Subject: ${subject}`);
+        console.log('Body:');
+        console.log(body);
+        console.log('='.repeat(60));
+        console.log('💡 To actually send emails, configure SMTP credentials in environment variables');
+        console.log('='.repeat(60) + '\n');
+        
+        // Log as simulated send
+        for (const email of emailAddresses) {
+          await storage.createEmailNotification({
+            userId: user.id,
+            reminderId: reminder.id,
+            emailAddress: email,
+            subject,
+            body,
+            status: 'simulated',
+          });
+        }
+        return;
+      }
+
       for (const email of emailAddresses.filter(Boolean)) {
         await this.transporter.sendMail({
           from: process.env.FROM_EMAIL || process.env.SMTP_USER,
