@@ -19,12 +19,20 @@ class EmailService {
     const config: EmailConfig = {
       host: process.env.SMTP_HOST || 'smtp.gmail.com',
       port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: process.env.SMTP_SECURE === 'true',
+      secure: false, // Use STARTTLS for port 587
       auth: {
         user: process.env.SMTP_USER || process.env.EMAIL_USER || '',
         pass: process.env.SMTP_PASS || process.env.EMAIL_PASS || '',
       },
     };
+
+    console.log('Email config:', {
+      host: config.host,
+      port: config.port,
+      secure: config.secure,
+      user: config.auth.user ? config.auth.user.substring(0, 3) + '***' : 'NOT_SET',
+      pass: config.auth.pass ? '***SET***' : 'NOT_SET'
+    });
 
     this.transporter = nodemailer.createTransport(config);
   }
