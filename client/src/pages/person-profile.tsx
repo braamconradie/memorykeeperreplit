@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Navigation } from "@/components/navigation";
 import { AddMemoryModal } from "@/components/add-memory-modal";
 import { AddReminderModal } from "@/components/add-reminder-modal";
+import { EditPersonModal } from "@/components/edit-person-modal";
 import { MemoryCard } from "@/components/memory-card";
 import { ReminderCard } from "@/components/reminder-card";
 import { Plus, Edit, Heart, Bell, User, Calendar, Gift, ArrowLeft } from "lucide-react";
@@ -23,6 +24,7 @@ export default function PersonProfile() {
   const personId = params?.id;
   const [showAddMemory, setShowAddMemory] = useState(false);
   const [showAddReminder, setShowAddReminder] = useState(false);
+  const [showEditPerson, setShowEditPerson] = useState(false);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -179,7 +181,7 @@ export default function PersonProfile() {
                   <Plus className="h-4 w-4 mr-2" />
                   Add Memory
                 </Button>
-                <Button variant="outline">
+                <Button variant="outline" onClick={() => setShowEditPerson(true)}>
                   <Edit className="h-4 w-4 mr-2" />
                   Edit
                 </Button>
@@ -343,6 +345,11 @@ export default function PersonProfile() {
         open={showAddReminder} 
         onOpenChange={setShowAddReminder}
         defaultPersonId={person.id}
+      />
+      <EditPersonModal 
+        open={showEditPerson} 
+        onOpenChange={setShowEditPerson}
+        person={person}
       />
     </div>
   );
