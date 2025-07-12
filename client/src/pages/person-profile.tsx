@@ -231,7 +231,7 @@ export default function PersonProfile() {
                         ))
                       ) : (
                         <div className="p-3 bg-neutral-50 border border-neutral-200 rounded-lg">
-                          <p className="text-sm text-neutral-500">No notes yet. Add some memories to capture important details!</p>
+                          <p className="text-sm text-neutral-500">No notes yet. Click the Edit button to add important details!</p>
                         </div>
                       )}
                     </div>
