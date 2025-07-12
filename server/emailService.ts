@@ -10,6 +10,9 @@ interface EmailConfig {
     user: string;
     pass: string;
   };
+  tls?: {
+    rejectUnauthorized: boolean;
+  };
 }
 
 class EmailService {
@@ -24,14 +27,17 @@ class EmailService {
         user: process.env.SMTP_USER || process.env.EMAIL_USER || '',
         pass: (process.env.SMTP_PASS || process.env.EMAIL_PASS || '').replace(/\s+/g, ''), // Remove all spaces
       },
+      tls: {
+        rejectUnauthorized: false
+      }
     };
 
     console.log('Email config:', {
       host: config.host,
       port: config.port,
       secure: config.secure,
-      user: config.auth.user ? config.auth.user.substring(0, 3) + '***' : 'NOT_SET',
-      pass: config.auth.pass ? '***SET***' : 'NOT_SET'
+      user: config.auth.user ? config.auth.user.substring(0, 3) + '***' + config.auth.user.slice(-10) : 'NOT_SET',
+      pass: config.auth.pass ? `***SET*** (${config.auth.pass.length} chars)` : 'NOT_SET'
     });
 
     this.transporter = nodemailer.createTransport(config);
@@ -161,10 +167,18 @@ class EmailService {
 
   async testConnection(): Promise<boolean> {
     try {
+      console.log('🔄 Testing email connection...');
       await this.transporter.verify();
+      console.log('✅ Email service connection verified');
       return true;
     } catch (error) {
-      console.error('Email service connection test failed:', error);
+      console.error('❌ Email service connection failed:', error);
+      console.error('Error details:', {
+        code: (error as any)?.code,
+        response: (error as any)?.response,
+        responseCode: (error as any)?.responseCode,
+        command: (error as any)?.command
+      });
       return false;
     }
   }
