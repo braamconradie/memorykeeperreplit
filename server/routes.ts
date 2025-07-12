@@ -113,7 +113,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           title: `${person.fullName}'s Birthday`,
           description: `Birthday reminder for ${person.fullName}`,
           reminderDate: person.birthDate,
-          advanceDays: req.body.birthdayAdvanceDays ?? 0, // Use provided value or default to same day
+          advanceDays: req.body.birthdayAdvanceDays ?? 1, // Use provided value or default to 1 day before
           isRecurring: true,
           isActive: true,
         });
