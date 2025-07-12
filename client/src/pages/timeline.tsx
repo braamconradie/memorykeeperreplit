@@ -74,7 +74,13 @@ export default function Timeline() {
     const matchesPerson = selectedPerson === "all" || 
       reminder.personId?.toString() === selectedPerson;
     
-    return matchesSearch && matchesPerson;
+    // Only show future reminders (not past due)
+    const today = new Date();
+    const [year, month, day] = reminder.reminderDate.split('-').map(Number);
+    const reminderDate = new Date(year, month - 1, day);
+    const isUpcoming = reminderDate >= today;
+    
+    return matchesSearch && matchesPerson && isUpcoming;
   }) || [];
 
   if (authLoading) {
