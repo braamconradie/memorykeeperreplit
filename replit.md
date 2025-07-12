@@ -8,6 +8,15 @@ Memory Keeper is a full-stack web application designed to help users nurture the
 
 Preferred communication style: Simple, everyday language.
 
+## Recent Changes
+
+### Birthday Form Improvement (July 12, 2025)
+- Updated person creation form to use separate dropdown fields for day, month, and optional year
+- Replaced calendar date picker with intuitive dropdown menus
+- Day and month are required together, year is completely optional
+- Improved user experience with clear validation and helpful descriptions
+- Successfully tested and confirmed working by user
+
 ## System Architecture
 
 ### Frontend Architecture
