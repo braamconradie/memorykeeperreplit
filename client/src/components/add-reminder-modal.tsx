@@ -274,7 +274,7 @@ export function AddReminderModal({ open, onOpenChange, defaultPersonId }: AddRem
               name="advanceDays"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Advance Notice (days)</FormLabel>
+                  <FormLabel>Additional Advance Reminder (optional)</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -286,7 +286,7 @@ export function AddReminderModal({ open, onOpenChange, defaultPersonId }: AddRem
                     />
                   </FormControl>
                   <FormDescription>
-                    Get notified this many days before the date (0 = on the day only)
+                    Type number of days in this box to get an additional advance reminder in addition to the one on the actual day. Leave empty or 0 for reminder on the day only.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
