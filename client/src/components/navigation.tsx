@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Heart, Home, Users, Clock, User, Search, Bell, LogOut, Settings } from "lucide-react";
+import { Heart, Home, Users, Clock, User, LogOut, Settings } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useLocation } from "wouter";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -77,13 +77,6 @@ export function Navigation() {
 
           {/* User Menu */}
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm">
-              <Search className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="sm">
-              <Bell className="h-4 w-4" />
-            </Button>
-            
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
