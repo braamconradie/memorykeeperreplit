@@ -33,7 +33,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { X, Plus } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { Label } from "@/components/ui/label";
+import { X, Plus, UserPlus } from "lucide-react";
 
 const memorySchema = z.object({
   personId: z.number().min(1, "Please select a person"),
@@ -41,7 +43,13 @@ const memorySchema = z.object({
   tags: z.array(z.string()).optional(),
 });
 
+const newPersonSchema = z.object({
+  fullName: z.string().min(1, "Full name is required"),
+  relationship: z.string().min(1, "Relationship is required"),
+});
+
 type MemoryFormData = z.infer<typeof memorySchema>;
+type NewPersonFormData = z.infer<typeof newPersonSchema>;
 
 interface AddMemoryModalProps {
   open: boolean;
@@ -54,6 +62,8 @@ export function AddMemoryModal({ open, onOpenChange, defaultPersonId }: AddMemor
   const queryClient = useQueryClient();
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>([]);
+  const [showNewPersonForm, setShowNewPersonForm] = useState(false);
+  const [newPersonData, setNewPersonData] = useState({ fullName: "", relationship: "" });
 
   const form = useForm<MemoryFormData>({
     resolver: zodResolver(memorySchema),
@@ -78,6 +88,17 @@ export function AddMemoryModal({ open, onOpenChange, defaultPersonId }: AddMemor
     },
   });
 
+  const createPersonMutation = useMutation({
+    mutationFn: async (data: NewPersonFormData) => {
+      const response = await apiRequest('POST', '/api/people', data);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/people'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/stats'] });
+    },
+  });
+
   const createMemoryMutation = useMutation({
     mutationFn: async (data: MemoryFormData) => {
       const memoryData = {
@@ -97,6 +118,8 @@ export function AddMemoryModal({ open, onOpenChange, defaultPersonId }: AddMemor
       form.reset();
       setTags([]);
       setTagInput("");
+      setShowNewPersonForm(false);
+      setNewPersonData({ fullName: "", relationship: "" });
     },
     onError: (error) => {
       if (isUnauthorizedError(error)) {
@@ -137,8 +160,51 @@ export function AddMemoryModal({ open, onOpenChange, defaultPersonId }: AddMemor
     }
   };
 
-  const onSubmit = (data: MemoryFormData) => {
+  const onSubmit = async (data: MemoryFormData) => {
     createMemoryMutation.mutate(data);
+  };
+
+  const handleCreateNewPerson = async () => {
+    if (!newPersonData.fullName || !newPersonData.relationship) {
+      toast({
+        title: "Missing information",
+        description: "Please fill in both name and relationship fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const response = await createPersonMutation.mutateAsync(newPersonData);
+      const newPerson = response;
+      
+      // Auto-select the newly created person
+      form.setValue('personId', newPerson.id);
+      setShowNewPersonForm(false);
+      setNewPersonData({ fullName: "", relationship: "" });
+      
+      toast({
+        title: "Person added",
+        description: `${newPerson.fullName} has been added to your contacts.`,
+      });
+    } catch (error) {
+      if (isUnauthorizedError(error)) {
+        toast({
+          title: "Unauthorized",
+          description: "You are logged out. Logging in again...",
+          variant: "destructive",
+        });
+        setTimeout(() => {
+          window.location.href = "/api/login";
+        }, 500);
+        return;
+      }
+      toast({
+        title: "Error",
+        description: "Failed to add person. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -175,6 +241,19 @@ export function AddMemoryModal({ open, onOpenChange, defaultPersonId }: AddMemor
                           {person.fullName}
                         </SelectItem>
                       ))}
+                      <Separator />
+                      <div className="p-2">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="w-full justify-start text-left"
+                          onClick={() => setShowNewPersonForm(true)}
+                        >
+                          <UserPlus className="h-4 w-4 mr-2" />
+                          Add New Person
+                        </Button>
+                      </div>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -199,6 +278,67 @@ export function AddMemoryModal({ open, onOpenChange, defaultPersonId }: AddMemor
                 </FormItem>
               )}
             />
+
+            {/* New Person Creation Form */}
+            {showNewPersonForm && (
+              <div className="p-4 border rounded-lg bg-gray-50 dark:bg-gray-800 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-medium">Add New Person</h4>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setShowNewPersonForm(false);
+                      setNewPersonData({ fullName: "", relationship: "" });
+                    }}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="newPersonName" className="text-sm font-medium">
+                      Full Name
+                    </Label>
+                    <Input
+                      id="newPersonName"
+                      placeholder="Enter full name"
+                      value={newPersonData.fullName}
+                      onChange={(e) => setNewPersonData({
+                        ...newPersonData,
+                        fullName: e.target.value
+                      })}
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="newPersonRelationship" className="text-sm font-medium">
+                      Relationship
+                    </Label>
+                    <Input
+                      id="newPersonRelationship"
+                      placeholder="e.g., Friend, Family"
+                      value={newPersonData.relationship}
+                      onChange={(e) => setNewPersonData({
+                        ...newPersonData,
+                        relationship: e.target.value
+                      })}
+                    />
+                  </div>
+                </div>
+                
+                <Button
+                  type="button"
+                  onClick={handleCreateNewPerson}
+                  disabled={createPersonMutation.isPending}
+                  className="w-full"
+                >
+                  {createPersonMutation.isPending ? "Adding..." : "Add Person"}
+                </Button>
+              </div>
+            )}
 
             <div className="space-y-2">
               <FormLabel>Tags (optional)</FormLabel>
