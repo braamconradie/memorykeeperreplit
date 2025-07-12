@@ -21,21 +21,33 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
 
 const personSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
   relationship: z.string().min(1, "Relationship is required"),
-  birthDate: z.date().optional(),
+  birthDay: z.number().min(1).max(31).optional(),
+  birthMonth: z.number().min(1).max(12).optional(),
   birthYear: z.number().min(1900).max(new Date().getFullYear()).optional(),
   notes: z.string().optional(),
+}).refine((data) => {
+  // If either day or month is provided, both must be provided
+  if (data.birthDay !== undefined || data.birthMonth !== undefined) {
+    return data.birthDay !== undefined && data.birthMonth !== undefined;
+  }
+  return true;
+}, {
+  message: "Both day and month are required for birthday",
+  path: ["birthDay"],
 });
 
 type PersonFormData = z.infer<typeof personSchema>;
@@ -61,8 +73,13 @@ export function AddPersonModal({ open, onOpenChange }: AddPersonModalProps) {
   const createPersonMutation = useMutation({
     mutationFn: async (data: PersonFormData) => {
       const personData = {
-        ...data,
-        birthDate: data.birthDate ? data.birthDate.toISOString().split('T')[0] : undefined,
+        fullName: data.fullName,
+        relationship: data.relationship,
+        birthDate: data.birthDay && data.birthMonth ? 
+          `${new Date().getFullYear()}-${data.birthMonth.toString().padStart(2, '0')}-${data.birthDay.toString().padStart(2, '0')}` : 
+          undefined,
+        birthYear: data.birthYear,
+        notes: data.notes,
       };
       await apiRequest('POST', '/api/people', personData);
     },
@@ -143,74 +160,97 @@ export function AddPersonModal({ open, onOpenChange }: AddPersonModalProps) {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="birthDate"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Birth Date (optional)</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-full pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) =>
-                          date > new Date() || date < new Date("1900-01-01")
-                        }
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormDescription>
-                    Setting a birth date will automatically create birthday reminders
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="space-y-4">
+              <FormLabel>Birthday</FormLabel>
+              <div className="grid grid-cols-3 gap-4">
+                <FormField
+                  control={form.control}
+                  name="birthDay"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Day</FormLabel>
+                      <Select onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Day" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
+                            <SelectItem key={day} value={day.toString()}>
+                              {day}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name="birthYear"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Birth Year (optional)</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      min="1900"
-                      max={new Date().getFullYear()}
-                      placeholder="e.g., 1990"
-                      {...field}
-                      onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Used to calculate age in birthday reminders
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormField
+                  control={form.control}
+                  name="birthMonth"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Month</FormLabel>
+                      <Select onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Month" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {[
+                            { value: 1, label: "January" },
+                            { value: 2, label: "February" },
+                            { value: 3, label: "March" },
+                            { value: 4, label: "April" },
+                            { value: 5, label: "May" },
+                            { value: 6, label: "June" },
+                            { value: 7, label: "July" },
+                            { value: 8, label: "August" },
+                            { value: 9, label: "September" },
+                            { value: 10, label: "October" },
+                            { value: 11, label: "November" },
+                            { value: 12, label: "December" },
+                          ].map((month) => (
+                            <SelectItem key={month.value} value={month.value.toString()}>
+                              {month.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="birthYear"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Year (optional)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min="1900"
+                          max={new Date().getFullYear()}
+                          placeholder="e.g., 1990"
+                          {...field}
+                          onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <FormDescription>
+                Day and month are required for birthday reminders. Year is optional and used to calculate age.
+              </FormDescription>
+            </div>
 
             <FormField
               control={form.control}
