@@ -10,6 +10,14 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+### Delete Person Functionality (July 12, 2025)
+- Added comprehensive delete person functionality with confirmation dialog
+- Implemented dropdown menu with Edit and Delete options on person cards
+- Added proper error handling and success notifications for delete operations
+- Connected to existing backend DELETE API endpoint for secure deletion
+- Delete operation removes person and all associated memories and reminders
+- User testing confirmed functionality works perfectly
+
 ### Automated Testing Infrastructure (July 12, 2025)
 - Implemented comprehensive testing framework using Vitest and Testing Library
 - Created 30 automated tests covering core functionality with 100% pass rate
