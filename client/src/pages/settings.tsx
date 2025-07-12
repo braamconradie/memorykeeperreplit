@@ -74,6 +74,36 @@ export default function Settings() {
     },
   });
 
+  const testRemindersMutation = useMutation({
+    mutationFn: async () => {
+      await apiRequest('POST', '/api/test-reminders', {});
+    },
+    onSuccess: () => {
+      toast({
+        title: "Test completed",
+        description: "Reminder system test has been triggered. Check your email and server logs for results.",
+      });
+    },
+    onError: (error) => {
+      if (isUnauthorizedError(error)) {
+        toast({
+          title: "Unauthorized",
+          description: "You are logged out. Logging in again...",
+          variant: "destructive",
+        });
+        setTimeout(() => {
+          window.location.href = "/api/login";
+        }, 500);
+        return;
+      }
+      toast({
+        title: "Error",
+        description: "Failed to test reminder system. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const addEmail = () => {
     if (!newEmail.trim()) return;
     
@@ -250,6 +280,34 @@ export default function Settings() {
                     <p>Notifications are sent at 9:00 AM on the day of the event</p>
                   </div>
                 </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Test reminder system - Development only */}
+          <Card className="mt-6 border-orange-200 bg-orange-50 dark:bg-orange-900/20 dark:border-orange-800">
+            <CardHeader>
+              <CardTitle className="text-lg text-orange-800 dark:text-orange-200">
+                🧪 Test Reminder System
+              </CardTitle>
+              <CardDescription className="text-orange-600 dark:text-orange-300">
+                Manually trigger the email reminder system to test without waiting for the scheduled time.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <p className="text-sm text-orange-700 dark:text-orange-300">
+                  This will check all your reminders and send emails for any that are due today.
+                  Make sure you have notification emails set up above.
+                </p>
+                <Button 
+                  onClick={() => testRemindersMutation.mutate()}
+                  disabled={testRemindersMutation.isPending}
+                  variant="outline"
+                  className="w-full border-orange-300 text-orange-700 hover:bg-orange-100 dark:border-orange-600 dark:text-orange-200 dark:hover:bg-orange-800"
+                >
+                  {testRemindersMutation.isPending ? "Testing..." : "Test Reminder System"}
+                </Button>
               </div>
             </CardContent>
           </Card>

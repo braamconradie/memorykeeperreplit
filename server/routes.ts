@@ -321,6 +321,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Test reminder emails (for development)
+  app.post('/api/test-reminders', isAuthenticated, async (req: any, res) => {
+    try {
+      console.log("Manual test of reminder system triggered");
+      await cronJobService.testReminders();
+      res.json({ message: "Reminder test completed. Check server logs for details." });
+    } catch (error) {
+      console.error("Error testing reminders:", error);
+      res.status(500).json({ message: "Failed to test reminder system" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
