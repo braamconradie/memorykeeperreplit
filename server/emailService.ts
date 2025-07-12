@@ -22,7 +22,7 @@ class EmailService {
       secure: false, // Use STARTTLS for port 587
       auth: {
         user: process.env.SMTP_USER || process.env.EMAIL_USER || '',
-        pass: process.env.SMTP_PASS || process.env.EMAIL_PASS || '',
+        pass: (process.env.SMTP_PASS || process.env.EMAIL_PASS || '').replace(/\s+/g, ''), // Remove all spaces
       },
     };
 
