@@ -141,11 +141,8 @@ export default function PersonProfile() {
   const getImportantNotes = () => {
     if (!person.notes) return [];
     
-    // Split notes by common separators and filter out empty ones
-    return person.notes
-      .split(/[.!?;]\s+/)
-      .filter(note => note.trim().length > 0)
-      .slice(0, 3); // Show max 3 important notes
+    // Return the full notes text as one item to preserve line breaks
+    return [person.notes];
   };
 
   return (
@@ -226,7 +223,7 @@ export default function PersonProfile() {
                       {getImportantNotes().length > 0 ? (
                         getImportantNotes().map((note, index) => (
                           <div key={index} className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                            <p className="text-sm text-amber-800">{note.trim()}</p>
+                            <p className="text-sm text-amber-800 whitespace-pre-wrap">{note.trim()}</p>
                           </div>
                         ))
                       ) : (
