@@ -6,8 +6,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Navigation } from "@/components/navigation";
 import { AddMemoryModal } from "@/components/add-memory-modal";
 import { AddPersonModal } from "@/components/add-person-modal";
+import { AddReminderModal } from "@/components/add-reminder-modal";
 import { ReminderCard } from "@/components/reminder-card";
-import { Plus, Users, Heart, Bell, Star, Calendar, CalendarDays, ArrowRight } from "lucide-react";
+import { Plus, Users, Heart, Bell, Star, Calendar, CalendarDays, ArrowRight, Gift } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -19,6 +20,7 @@ export default function Home() {
   const { toast } = useToast();
   const [showAddMemory, setShowAddMemory] = useState(false);
   const [showAddPerson, setShowAddPerson] = useState(false);
+  const [showAddReminder, setShowAddReminder] = useState(false);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -216,6 +218,17 @@ export default function Home() {
                 <Button 
                   variant="outline" 
                   className="w-full justify-between"
+                  onClick={() => setShowAddReminder(true)}
+                >
+                  <span className="flex items-center">
+                    <Gift className="h-4 w-4 mr-3" />
+                    Add Birthday/Anniversary
+                  </span>
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-between"
                   onClick={() => window.location.href = '/timeline'}
                 >
                   <span className="flex items-center">
@@ -320,6 +333,10 @@ export default function Home() {
       <AddPersonModal 
         open={showAddPerson} 
         onOpenChange={setShowAddPerson}
+      />
+      <AddReminderModal 
+        open={showAddReminder} 
+        onOpenChange={setShowAddReminder}
       />
     </div>
   );
