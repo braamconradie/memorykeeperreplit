@@ -1,0 +1,86 @@
+{
+  "name": "Memory Keeper",
+  "short_name": "Memory Keeper",
+  "description": "Nurture your relationships with thoughtful reminders and meaningful memories",
+  "theme_color": "#6366f1",
+  "background_color": "#f8fafc",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiByeD0iMTIiIGZpbGw9IiM2MzY2ZjEiLz4KPHN2ZyB4PSIxMiIgeT0iMTIiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CjxwYXRoIGQ9Ik0yMC44NCAxNC42MWMtMS4xNS43LTIuNTcgMS4xMS00LjA4IDEuMTFzLTIuOTMtLjQxLTQuMDgtMS4xMSIvPgo8cGF0aCBkPSJNMjAuMjMgNy43M0MxOS43OSA2LjMzIDE4LjU0IDUuMjUgMTcuMDIgNS4yNWMtMS4xNiAwLTIuMTguNDMtMi45NSAxLjEzLS43Ny0uNy0xLjc5LTEuMTMtMi45NS0xLjEzLTEuNTIgMC0yLjc3IDEuMDgtMy4yMSAyLjQ4LS4xNC40NC0uMi45MS0uMiAxLjM5IDAgMi44IDIuNjMgNS4zNiA2LjMzIDguNzJhMi40IDIuNCAwIDAgMCAyLjcyIDBjMy43LTMuMzYgNi4zMy01LjkyIDYuMzMtOC43MiAwLS40OC0uMDYtLjk1LS4yLTEuMzl6Ii8+Cjwvc3ZnPgo8L3N2Zz4K",
+      "sizes": "48x48",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzIiIGhlaWdodD0iNzIiIHZpZXdCb3g9IjAgMCA3MiA3MiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjcyIiBoZWlnaHQ9IjcyIiByeD0iMTgiIGZpbGw9IiM2MzY2ZjEiLz4KPHN2ZyB4PSIxOCIgeT0iMTgiIHdpZHRoPSIzNiIgaGVpZ2h0PSIzNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CjxwYXRoIGQ9Ik0yMC44NCAxNC42MWMtMS4xNS43LTIuNTcgMS4xMS00LjA4IDEuMTFzLTIuOTMtLjQxLTQuMDgtMS4xMSIvPgo8cGF0aCBkPSJNMjAuMjMgNy43M0MxOS43OSA2LjMzIDE4LjU0IDUuMjUgMTcuMDIgNS4yNWMtMS4xNiAwLTIuMTguNDMtMi45NSAxLjEzLS43Ny0uNy0xLjc5LTEuMTMtMi45NS0xLjEzLTEuNTIgMC0yLjc3IDEuMDgtMy4yMSAyLjQ4LS4xNC40NC0uMi45MS0uMiAxLjM5IDAgMi44IDIuNjMgNS4zNiA2LjMzIDguNzJhMi40IDIuNCAwIDAgMCAyLjcyIDBjMy43LTMuMzYgNi4zMy01LjkyIDYuMzMtOC43MiAwLS40OC0uMDYtLjk1LS4yLTEuMzl6Ii8+Cjwvc3ZnPgo8L3N2Zz4K",
+      "sizes": "72x72",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiByeD0iMjQiIGZpbGw9IiM2MzY2ZjEiLz4KPHN2ZyB4PSIyNCIgeT0iMjQiIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CjxwYXRoIGQ9Ik0yMC44NCAxNC42MWMtMS4xNS43LTIuNTcgMS4xMS00LjA4IDEuMTFzLTIuOTMtLjQxLTQuMDgtMS4xMSIvPgo8cGF0aCBkPSJNMjAuMjMgNy43M0MxOS43OSA2LjMzIDE4LjU0IDUuMjUgMTcuMDIgNS4yNWMtMS4xNiAwLTIuMTguNDMtMi45NSAxLjEzLS43Ny0uNy0xLjc5LTEuMTMtMi45NS0xLjEzLTEuNTIgMC0yLjc3IDEuMDgtMy4yMSAyLjQ4LS4xNC40NC0uMi45MS0uMiAxLjM5IDAgMi44IDIuNjMgNS4zNiA6IDYuMzMgOC43MmEyLjQgMi40IDAgMCAwIDIuNzIgMGMzLjctMy4zNiA2LjMzLTUuOTIgNi4zMy04LjcyIDAtLjQ4LS4wNi0uOTUtLjItMS4zOXoiLz4KPC9zdmc+Cjwvc3ZnPgo=",
+      "sizes": "96x96",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQ0IiBoZWlnaHQ9IjE0NCIgdmlld0JveD0iMCAwIDE0NCAxNDQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNDQiIGhlaWdodD0iMTQ0IiByeD0iMzYiIGZpbGw9IiM2MzY2ZjEiLz4KPHN2ZyB4PSIzNiIgeT0iMzYiIHdpZHRoPSI3MiIgaGVpZ2h0PSI3MiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KPHBhdGggZD0iTTIwLjg0IDE0LjYxYy0xLjE1LjctMi41NyAxLjExLTQuMDggMS4xMXMtMi45My0uNDEtNC4wOC0xLjExIi8+CjxwYXRoIGQ9Ik0yMC4yMyA3LjczQzE5Ljc5IDYuMzMgMTguNTQgNS4yNSAxNy4wMiA1LjI1Yy0xLjE2IDAtMi4xOC40My0yLjk1IDEuMTMtLjc3LS43LTEuNzktMS4xMy0yLjk1LTEuMTMtMS41MiAwLTIuNzcgMS4wOC0zLjIxIDIuNDgtLjE0LjQ0LS4yLjkxLS4yIDEuMzkgMCAyLjggMi42MyA1LjM2IDYuMzMgOC43MmEyLjQgMi40IDAgMCAwIDIuNzIgMGMzLjctMy4zNiA2LjMzLTUuOTIgNi4zMy04LjcyIDAtLjQ4LS4wNi0uOTUtLjItMS4zOXoiLz4KPC9zdmc+Cjwvc3ZnPgo=",
+      "sizes": "144x144",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iNDgiIGZpbGw9IiM2MzY2ZjEiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KPHBhdGggZD0iTTIwLjg0IDE0LjYxYy0xLjE1LjctMi41NyAxLjExLTQuMDggMS4xMXMtMi45My0uNDEtNC4wOC0xLjExIi8+CjxwYXRoIGQ9Ik0yMC4yMyA3LjczQzE5Ljc5IDYuMzMgMTguNTQgNS4yNSAxNy4wMiA1LjI1Yy0xLjE2IDAtMi4xOC40My0yLjk1IDEuMTMtLjc3LS43LTEuNzktMS4xMy0yLjk1LTEuMTMtMS41MiAwLTIuNzcgMS4wOC0zLjIxIDIuNDgtLjE0LjQ0LS4yLjkxLS4yIDEuMzkgMCAyLjggMi42MyA1LjM2IDYuMzMgOC43MmEyLjQgMi40IDAgMCAwIDIuNzIgMGMzLjctMy4zNiA2LjMzLTUuOTIgNi4zMy04LjcyIDAtLjQ4LS4wNi0uOTUtLjItMS4zOXoiLz4KPC9zdmc+Cjwvc3ZnPgo=",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iMTI4IiBmaWxsPSIjNjM2NmYxIi8+CjxzdmcgeD0iMTI4IiB5PSIxMjgiIHdpZHRoPSIyNTYiIGhlaWdodD0iMjU2IiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgo8cGF0aCBkPSJNMjAuODQgMTQuNjFjLTEuMTUuNy0yLjU3IDEuMTEtNC4wOCAxLjExcy0yLjkzLS40MS00LjA4LTEuMTEiLz4KPHBhdGggZD0iTTIwLjIzIDcuNzNDMTkuNzkgNi4zMyAxOC41NCA1LjI1IDE3LjAyIDUuMjVjLTEuMTYgMC0yLjE4LjQzLTIuOTUgMS4xMy0uNzctLjctMS43OS0xLjEzLTIuOTUtMS4xMy0xLjUyIDAtMi43NyAxLjA4LTMuMjEgMi40OC0uMTQuNDQtLjIuOTEtLjIgMS4zOSAwIDIuOCAyLjYzIDUuMzYgNi4zMyA4LjcyYTIuNCAyLjQgMCAwIDAgMi43MiAwYzMuNy0zLjM2IDYuMzMtNS45MiA2LjMzLTguNzIgMC0uNDgtLjA2LS45NS0uMi0xLjM5eiIvPgo8L3N2Zz4KPC9zdmc+Cg==",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["productivity", "lifestyle", "social"],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTQwIiBoZWlnaHQ9IjcyMCIgdmlld0JveD0iMCAwIDU0MCA3MjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1NDAiIGhlaWdodD0iNzIwIiBmaWxsPSIjZjhmYWZjIi8+CjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI1NDAiIGhlaWdodD0iNjQiIGZpbGw9IiNmZmZmZmYiLz4KPHRleHQgeD0iMjcwIiB5PSI0MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzFmMjkzNyIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iNjAwIj5NZW1vcnkgS2VlcGVyPC90ZXh0Pgo8L3N2Zz4K",
+      "sizes": "540x720",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzIwIiBoZWlnaHQ9IjU0MCIgdmlld0JveD0iMCAwIDcyMCA1NDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI3MjAiIGhlaWdodD0iNTQwIiBmaWxsPSIjZjhmYWZjIi8+CjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI3MjAiIGhlaWdodD0iNjQiIGZpbGw9IiNmZmZmZmYiLz4KPHRleHQgeD0iMzYwIiB5PSI0MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzFmMjkzNyIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iNjAwIj5NZW1vcnkgS2VlcGVyPC90ZXh0Pgo8L3N2Zz4K",
+      "sizes": "720x540",
+      "type": "image/svg+xml",
+      "form_factor": "wide"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Add Memory",
+      "short_name": "Add Memory",
+      "description": "Quick add a new memory",
+      "url": "/?action=add-memory",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiByeD0iMjQiIGZpbGw9IiM2MzY2ZjEiLz4KPHN2ZyB4PSIyNCIgeT0iMjQiIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CjxwYXRoIGQ9Ik0xMiA1djE0Ii8+CjxwYXRoIGQ9Im01IDEyaDE0Ii8+Cjwvc3ZnPgo8L3N2Zz4K",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "View People",
+      "short_name": "People",
+      "description": "View your relationship network",
+      "url": "/people",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiByeD0iMjQiIGZpbGw9IiM2MzY2ZjEiLz4KPHN2ZyB4PSIyNCIgeT0iMjQiIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CjxwYXRoIGQ9Ik0xNyAyMXYtMmEyIDIgMCAwIDAtMi0ySDlhMiAyIDAgMCAwLTIgMnYyIi8+CjxjaXJjbGUgY3g9IjEyIiBjeT0iNyIgcj0iNCIvPgo8cGF0aCBkPSJNMjIgMjF2LTJhMiAyIDAgMCAwLTEuMzMtMS44N2wtMy0xLjEzIi8+CjxjaXJjbGUgY3g9IjE5IiBjeT0iNyIgcj0iMyIvPgo8L3N2Zz4KPC9zdmc+Cg==",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ]
+}
