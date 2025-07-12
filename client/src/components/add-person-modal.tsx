@@ -38,6 +38,7 @@ const personSchema = z.object({
   birthDay: z.number().min(1).max(31).optional(),
   birthMonth: z.number().min(1).max(12).optional(),
   birthYear: z.number().min(1900).max(new Date().getFullYear()).optional(),
+  birthdayAdvanceDays: z.number().min(0).max(30).optional(),
   notes: z.string().optional(),
 }).refine((data) => {
   // If either day or month is provided, both must be provided
@@ -66,6 +67,7 @@ export function AddPersonModal({ open, onOpenChange }: AddPersonModalProps) {
     defaultValues: {
       fullName: "",
       relationship: "",
+      birthdayAdvanceDays: 3,
       notes: "",
     },
   });
@@ -79,6 +81,7 @@ export function AddPersonModal({ open, onOpenChange }: AddPersonModalProps) {
           `${data.birthYear || 2000}-${data.birthMonth.toString().padStart(2, '0')}-${data.birthDay.toString().padStart(2, '0')}` : 
           undefined,
         birthYear: data.birthYear,
+        birthdayAdvanceDays: data.birthdayAdvanceDays,
         notes: data.notes,
       };
       await apiRequest('POST', '/api/people', personData);
@@ -251,6 +254,36 @@ export function AddPersonModal({ open, onOpenChange }: AddPersonModalProps) {
                 Day and month are required for birthday reminders. Year is optional and used to calculate age.
               </FormDescription>
             </div>
+
+            <FormField
+              control={form.control}
+              name="birthdayAdvanceDays"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Birthday Reminder Advance Notice</FormLabel>
+                  <Select onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)} defaultValue={field.value?.toString()}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select advance notice" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="0">On the day</SelectItem>
+                      <SelectItem value="1">1 day before</SelectItem>
+                      <SelectItem value="2">2 days before</SelectItem>
+                      <SelectItem value="3">3 days before</SelectItem>
+                      <SelectItem value="7">1 week before</SelectItem>
+                      <SelectItem value="14">2 weeks before</SelectItem>
+                      <SelectItem value="30">1 month before</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    How many days before the birthday should you receive reminder emails?
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <FormField
               control={form.control}
