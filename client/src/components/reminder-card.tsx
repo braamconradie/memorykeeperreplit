@@ -6,6 +6,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
+import { EditReminderModal } from "./edit-reminder-modal";
+import { useState } from "react";
 
 interface ReminderCardProps {
   reminder: {
@@ -28,6 +30,7 @@ interface ReminderCardProps {
 export function ReminderCard({ reminder, priority = 'medium' }: ReminderCardProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [showEditModal, setShowEditModal] = useState(false);
 
   const deleteReminderMutation = useMutation({
     mutationFn: async (id: number) => {
@@ -140,48 +143,56 @@ export function ReminderCard({ reminder, priority = 'medium' }: ReminderCardProp
   const daysInfo = getDaysUntil();
 
   return (
-    <Card className={`hover:shadow-md transition-shadow ${getPriorityColor()}`}>
-      <CardContent className="p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3 flex-1">
-            <div className={`w-10 h-10 rounded-full ${getIconColor()} flex items-center justify-center`}>
-              {getIcon()}
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <h3 className="font-medium text-neutral-800">{reminder.title}</h3>
-                <Badge variant={daysInfo.variant}>{daysInfo.text}</Badge>
+    <>
+      <Card className={`hover:shadow-md transition-shadow ${getPriorityColor()}`}>
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3 flex-1">
+              <div className={`w-10 h-10 rounded-full ${getIconColor()} flex items-center justify-center`}>
+                {getIcon()}
               </div>
-              <p className="text-sm text-neutral-600 mt-1">
-                {reminder.description || formatDate(reminder.reminderDate)}
-              </p>
-              {reminder.person && (
-                <p className="text-xs text-neutral-500 mt-1">
-                  {reminder.person.fullName} • {reminder.person.relationship}
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-medium text-neutral-800">{reminder.title}</h3>
+                  <Badge variant={daysInfo.variant}>{daysInfo.text}</Badge>
+                </div>
+                <p className="text-sm text-neutral-600 mt-1">
+                  {reminder.description || formatDate(reminder.reminderDate)}
                 </p>
-              )}
-              {reminder.advanceDays && reminder.advanceDays > 0 && (
-                <p className="text-xs text-neutral-500 mt-1">
-                  Remind me {reminder.advanceDays} days before
-                </p>
-              )}
+                {reminder.person && (
+                  <p className="text-xs text-neutral-500 mt-1">
+                    {reminder.person.fullName} • {reminder.person.relationship}
+                  </p>
+                )}
+                {reminder.advanceDays && reminder.advanceDays > 0 && (
+                  <p className="text-xs text-neutral-500 mt-1">
+                    Remind me {reminder.advanceDays} days before
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="flex items-center space-x-2 ml-4">
+              <Button variant="ghost" size="sm" onClick={() => setShowEditModal(true)}>
+                <Edit className="h-4 w-4" />
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={handleDelete}
+                disabled={deleteReminderMutation.isPending}
+              >
+                <Trash2 className="h-4 w-4 text-red-500 hover:text-red-600" />
+              </Button>
             </div>
           </div>
-          <div className="flex items-center space-x-2 ml-4">
-            <Button variant="ghost" size="sm">
-              <Edit className="h-4 w-4" />
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={handleDelete}
-              disabled={deleteReminderMutation.isPending}
-            >
-              <Trash2 className="h-4 w-4 text-red-500 hover:text-red-600" />
-            </Button>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+      
+      <EditReminderModal
+        open={showEditModal}
+        onOpenChange={setShowEditModal}
+        reminder={reminder}
+      />
+    </>
   );
 }
