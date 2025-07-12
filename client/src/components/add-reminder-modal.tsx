@@ -43,7 +43,6 @@ const reminderSchema = z.object({
   type: z.enum(["birthday", "anniversary", "custom"], {
     required_error: "Please select a reminder type",
   }),
-  title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
   reminderDate: z.date({
     required_error: "Please select a date",
@@ -69,8 +68,8 @@ export function AddReminderModal({ open, onOpenChange, defaultPersonId }: AddRem
     defaultValues: {
       personId: defaultPersonId || 0,
       type: "custom",
-      title: "",
       description: "",
+      reminderDate: undefined,
       advanceDays: 0,
       isRecurring: false,
     },
@@ -92,8 +91,22 @@ export function AddReminderModal({ open, onOpenChange, defaultPersonId }: AddRem
 
   const createReminderMutation = useMutation({
     mutationFn: async (data: ReminderFormData) => {
+      const selectedPerson = people?.find(p => p.id === data.personId);
+      const personName = selectedPerson?.fullName || 'Someone';
+      
+      // Auto-generate title based on type
+      let title = '';
+      if (data.type === 'birthday') {
+        title = `${personName}'s Birthday`;
+      } else if (data.type === 'anniversary') {
+        title = `${personName}'s Anniversary`;
+      } else {
+        title = `${personName} - Custom Event`;
+      }
+      
       const reminderData = {
         ...data,
+        title,
         reminderDate: data.reminderDate.toISOString().split('T')[0],
       };
       await apiRequest('POST', '/api/reminders', reminderData);
@@ -131,8 +144,6 @@ export function AddReminderModal({ open, onOpenChange, defaultPersonId }: AddRem
   const onSubmit = (data: ReminderFormData) => {
     createReminderMutation.mutate(data);
   };
-
-  const watchedType = form.watch("type");
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -193,27 +204,6 @@ export function AddReminderModal({ open, onOpenChange, defaultPersonId }: AddRem
                       <SelectItem value="custom">Custom Event</SelectItem>
                     </SelectContent>
                   </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder={
-                        watchedType === "birthday" ? "Birthday" :
-                        watchedType === "anniversary" ? "Anniversary" :
-                        "Custom reminder title"
-                      }
-                      {...field} 
-                    />
-                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
