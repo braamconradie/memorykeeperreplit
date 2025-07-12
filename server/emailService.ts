@@ -31,11 +31,16 @@ class EmailService {
 
   async sendReminderEmail(user: User, reminder: ReminderWithPerson): Promise<void> {
     try {
-      const emailAddresses = [user.email];
-      
-      // Add any additional email addresses from environment
-      const additionalEmails = process.env.ADDITIONAL_EMAILS?.split(',') || [];
-      emailAddresses.push(...additionalEmails);
+      // Use user's notification email addresses, fallback to user email if none set
+      const emailAddresses = user.notificationEmails && user.notificationEmails.length > 0 
+        ? user.notificationEmails 
+        : [user.email].filter(Boolean);
+
+      // Skip sending if no email addresses are configured
+      if (emailAddresses.length === 0) {
+        console.log(`No notification emails configured for user ${user.id}, skipping reminder email`);
+        return;
+      }
 
       const subject = this.generateSubject(reminder);
       const body = this.generateBody(user, reminder);

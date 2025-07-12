@@ -10,6 +10,7 @@ import Home from "@/pages/home";
 import People from "@/pages/people";
 import Timeline from "@/pages/timeline";
 import PersonProfile from "@/pages/person-profile";
+import Settings from "@/pages/settings";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -24,6 +25,7 @@ function Router() {
           <Route path="/people" component={People} />
           <Route path="/timeline" component={Timeline} />
           <Route path="/person/:id" component={PersonProfile} />
+          <Route path="/settings" component={Settings} />
         </>
       )}
       <Route component={NotFound} />

@@ -30,6 +30,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // User settings routes
+  app.get('/api/user/settings', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      res.json({ notificationEmails: user?.notificationEmails || [] });
+    } catch (error) {
+      console.error("Error fetching user settings:", error);
+      res.status(500).json({ message: "Failed to fetch user settings" });
+    }
+  });
+
+  app.put('/api/user/settings', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const { notificationEmails } = req.body;
+      
+      // Validate email addresses
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (notificationEmails && Array.isArray(notificationEmails)) {
+        for (const email of notificationEmails) {
+          if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: `Invalid email address: ${email}` });
+          }
+        }
+      }
+
+      const updatedUser = await storage.updateUserSettings(userId, { notificationEmails });
+      res.json({ notificationEmails: updatedUser.notificationEmails });
+    } catch (error) {
+      console.error("Error updating user settings:", error);
+      res.status(500).json({ message: "Failed to update user settings" });
+    }
+  });
+
   // People routes
   app.get('/api/people', isAuthenticated, async (req: any, res) => {
     try {
