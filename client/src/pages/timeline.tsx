@@ -74,8 +74,9 @@ export default function Timeline() {
     const matchesPerson = selectedPerson === "all" || 
       reminder.personId?.toString() === selectedPerson;
     
-    // Only show future reminders (not past due)
+    // Only show today's and future reminders (not past due)
     const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set to start of day for accurate comparison
     const [year, month, day] = reminder.reminderDate.split('-').map(Number);
     const reminderDate = new Date(year, month - 1, day);
     const isUpcoming = reminderDate >= today;
