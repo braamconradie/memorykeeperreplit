@@ -17,6 +17,19 @@ Preferred communication style: Simple, everyday language.
 - Improved user experience with clear validation and helpful descriptions
 - Successfully tested and confirmed working by user
 
+### Email Notification Settings (July 12, 2025)
+- Added user settings page for managing notification email addresses
+- Users can now add multiple email addresses to receive reminders
+- Email validation ensures only valid addresses are stored
+- Updated email service to use user's specified notification addresses
+- Added settings link to user dropdown menu in navigation
+
+### Cron Job Optimization (July 12, 2025)
+- Updated cron job to run once daily at 5 AM instead of multiple times
+- Consolidated reminder checking into single comprehensive function
+- Improved logging to show which reminders are being processed
+- Enhanced efficiency by reducing unnecessary server processing
+
 ## System Architecture
 
 ### Frontend Architecture

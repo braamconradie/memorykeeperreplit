@@ -4,60 +4,60 @@ import { emailService } from './emailService';
 
 class CronJobService {
   start() {
-    // Run every day at 9 AM
-    cron.schedule('0 9 * * *', async () => {
-      console.log('Running daily reminder check...');
-      await this.checkAndSendReminders();
+    // Run every day at 5 AM to check for reminder emails
+    cron.schedule('0 5 * * *', async () => {
+      console.log('Running daily reminder check at 5 AM...');
+      await this.checkAndSendAllReminders();
     });
 
-    // Run every hour during business hours for advance reminders
-    cron.schedule('0 9-17 * * *', async () => {
-      console.log('Running hourly reminder check...');
-      await this.checkAndSendAdvanceReminders();
-    });
-
-    console.log('Cron jobs started successfully');
+    console.log('Cron jobs started successfully - will run daily at 5 AM');
   }
 
-  private async checkAndSendReminders() {
+  // Test function to manually trigger reminder checking (for testing purposes)
+  async testReminders() {
+    console.log('Testing reminder check manually...');
+    await this.checkAndSendAllReminders();
+  }
+
+  private async checkAndSendAllReminders() {
     try {
-      const dueReminders = await storage.getDueReminders();
+      const today = new Date();
+      const allReminders = await storage.getDueReminders();
       
-      for (const reminder of dueReminders) {
+      console.log(`Checking ${allReminders.length} reminders for ${today.toDateString()}`);
+      
+      for (const reminder of allReminders) {
         const user = await storage.getUser(reminder.userId);
-        if (user && user.email) {
+        if (!user) continue;
+        
+        const reminderDate = new Date(reminder.reminderDate);
+        let shouldSend = false;
+        let emailType = '';
+        
+        // Check if today is the exact reminder date
+        if (this.isSameDay(today, reminderDate)) {
+          shouldSend = true;
+          emailType = 'due';
+        }
+        
+        // Check if today is an advance notification day
+        if (reminder.advanceDays && reminder.advanceDays > 0) {
+          const advanceDate = new Date(reminderDate);
+          advanceDate.setDate(advanceDate.getDate() - reminder.advanceDays);
+          
+          if (this.isSameDay(today, advanceDate)) {
+            shouldSend = true;
+            emailType = 'advance';
+          }
+        }
+        
+        if (shouldSend) {
           await emailService.sendReminderEmail(user, reminder);
-          console.log(`Sent reminder email for ${reminder.title} to ${user.email}`);
+          console.log(`Sent ${emailType} reminder email for "${reminder.title}" to ${user.notificationEmails?.length ? user.notificationEmails.join(', ') : user.email}`);
         }
       }
     } catch (error) {
       console.error('Error checking and sending reminders:', error);
-    }
-  }
-
-  private async checkAndSendAdvanceReminders() {
-    try {
-      const today = new Date();
-      const reminders = await storage.getDueReminders();
-      
-      for (const reminder of reminders) {
-        if (reminder.advanceDays && reminder.advanceDays > 0) {
-          const reminderDate = new Date(reminder.reminderDate);
-          const advanceDate = new Date(reminderDate);
-          advanceDate.setDate(advanceDate.getDate() - reminder.advanceDays);
-          
-          // Check if today is the advance notification day
-          if (this.isSameDay(today, advanceDate)) {
-            const user = await storage.getUser(reminder.userId);
-            if (user && user.email) {
-              await emailService.sendReminderEmail(user, reminder);
-              console.log(`Sent advance reminder email for ${reminder.title} to ${user.email}`);
-            }
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Error checking and sending advance reminders:', error);
     }
   }
 
