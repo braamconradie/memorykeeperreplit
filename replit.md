@@ -44,6 +44,15 @@ Preferred communication style: Simple, everyday language.
 - Ensured consistent date formatting across frontend and backend without timezone shifts
 - Dates now display correctly in user's local timezone (New Zealand, US, etc.)
 
+### Timeline Page Conversion (July 12, 2025)
+- Converted Timeline page from showing memories to showing upcoming reminders
+- Timeline now displays chronological view of upcoming reminders and important dates
+- Added time-based filtering options (7 days, 30 days, 90 days, all future)
+- Implemented search functionality for reminders by title, description, or person name
+- Added person-based filtering to view reminders for specific individuals
+- Updated UI to use Calendar icon and reminder-focused terminology
+- Enhanced user experience with cleaner, more relevant timeline of upcoming events
+
 ## System Architecture
 
 ### Frontend Architecture

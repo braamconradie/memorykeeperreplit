@@ -3,10 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Navigation } from "@/components/navigation";
-import { AddMemoryModal } from "@/components/add-memory-modal";
-import { MemoryCard } from "@/components/memory-card";
+import { AddReminderModal } from "@/components/add-reminder-modal";
+import { ReminderCard } from "@/components/reminder-card";
 import { SearchBar } from "@/components/search-bar";
-import { Plus, Clock, Search } from "lucide-react";
+import { Plus, Calendar, Search } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -15,10 +15,10 @@ import { useEffect } from "react";
 export default function Timeline() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const { toast } = useToast();
-  const [showAddMemory, setShowAddMemory] = useState(false);
+  const [showAddReminder, setShowAddReminder] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedPerson, setSelectedPerson] = useState("all");
-  const [selectedTimeframe, setSelectedTimeframe] = useState("all");
+  const [selectedTimeframe, setSelectedTimeframe] = useState("30"); // Default to next 30 days
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -35,15 +35,16 @@ export default function Timeline() {
     }
   }, [isAuthenticated, authLoading, toast]);
 
-  const { data: memories, isLoading: memoriesLoading } = useQuery({
-    queryKey: ['/api/memories'],
+  const { data: reminders, isLoading: remindersLoading } = useQuery({
+    queryKey: ['/api/reminders/upcoming', selectedTimeframe],
     queryFn: async () => {
-      const response = await fetch('/api/memories');
+      const days = selectedTimeframe === "all" ? 365 : parseInt(selectedTimeframe);
+      const response = await fetch(`/api/reminders/upcoming?days=${days}`);
       if (!response.ok) {
         if (response.status === 401) {
           throw new Error('401: Unauthorized');
         }
-        throw new Error('Failed to fetch memories');
+        throw new Error('Failed to fetch reminders');
       }
       return response.json();
     },
@@ -63,21 +64,18 @@ export default function Timeline() {
     },
   });
 
-  const { data: searchResults, isLoading: searchLoading } = useQuery({
-    queryKey: ['/api/memories/search', searchQuery],
-    queryFn: async () => {
-      if (!searchQuery.trim()) return [];
-      const response = await fetch(`/api/memories/search?q=${encodeURIComponent(searchQuery)}`);
-      if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error('401: Unauthorized');
-        }
-        throw new Error('Failed to search memories');
-      }
-      return response.json();
-    },
-    enabled: !!searchQuery.trim(),
-  });
+  // Filter reminders based on search query and selected person
+  const filteredReminders = reminders?.filter(reminder => {
+    const matchesSearch = !searchQuery || 
+      reminder.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      reminder.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      reminder.person?.fullName.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesPerson = selectedPerson === "all" || 
+      reminder.personId?.toString() === selectedPerson;
+    
+    return matchesSearch && matchesPerson;
+  }) || [];
 
   if (authLoading) {
     return (
@@ -91,35 +89,12 @@ export default function Timeline() {
     return null;
   }
 
-  // Filter memories based on search query, person, and timeframe
-  const filteredMemories = (() => {
-    if (searchQuery.trim()) {
-      return searchResults || [];
-    }
-
-    let filtered = memories || [];
-
-    if (selectedPerson !== "all") {
-      filtered = filtered.filter(memory => memory.person?.id === parseInt(selectedPerson));
-    }
-
-    if (selectedTimeframe !== "all") {
-      const now = new Date();
-      const timeframeDays = {
-        'week': 7,
-        'month': 30,
-        'year': 365
-      };
-      
-      const days = timeframeDays[selectedTimeframe];
-      if (days) {
-        const cutoff = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
-        filtered = filtered.filter(memory => new Date(memory.createdAt) >= cutoff);
-      }
-    }
-
-    return filtered;
-  })();
+  // Sort reminders by reminder date (upcoming first)
+  const sortedReminders = filteredReminders.sort((a, b) => {
+    const dateA = new Date(a.reminderDate);
+    const dateB = new Date(b.reminderDate);
+    return dateA - dateB;
+  });
 
   return (
     <div className="min-h-screen bg-neutral-50">
@@ -130,14 +105,14 @@ export default function Timeline() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-xl">Memory Timeline</CardTitle>
+                <CardTitle className="text-xl">Reminder Timeline</CardTitle>
                 <p className="text-neutral-600 mt-1">
-                  Explore your memories chronologically and search for specific moments
+                  View all your upcoming reminders and important dates
                 </p>
               </div>
-              <Button onClick={() => setShowAddMemory(true)}>
+              <Button onClick={() => setShowAddReminder(true)}>
                 <Plus className="h-4 w-4 mr-2" />
-                Add Memory
+                Add Reminder
               </Button>
             </div>
           </CardHeader>
@@ -149,7 +124,7 @@ export default function Timeline() {
                   <SearchBar 
                     value={searchQuery}
                     onChange={setSearchQuery}
-                    placeholder="Search memories..."
+                    placeholder="Search reminders..."
                     icon={<Search className="h-4 w-4" />}
                   />
                 </div>
@@ -175,44 +150,44 @@ export default function Timeline() {
                       onChange={(e) => setSelectedTimeframe(e.target.value)}
                       className="w-full px-3 py-2 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                     >
-                      <option value="all">All Time</option>
-                      <option value="week">This Week</option>
-                      <option value="month">This Month</option>
-                      <option value="year">This Year</option>
+                      <option value="7">Next 7 Days</option>
+                      <option value="30">Next 30 Days</option>
+                      <option value="90">Next 90 Days</option>
+                      <option value="all">All Future</option>
                     </select>
                   </div>
                 </div>
               </div>
 
               {/* Timeline */}
-              {memoriesLoading || searchLoading ? (
+              {remindersLoading ? (
                 <div className="space-y-4">
                   {[...Array(5)].map((_, i) => (
                     <Skeleton key={i} className="h-32 w-full" />
                   ))}
                 </div>
-              ) : filteredMemories.length > 0 ? (
+              ) : sortedReminders.length > 0 ? (
                 <div className="space-y-4">
-                  {filteredMemories.map((memory) => (
-                    <MemoryCard key={memory.id} memory={memory} />
+                  {sortedReminders.map((reminder) => (
+                    <ReminderCard key={reminder.id} reminder={reminder} />
                   ))}
                 </div>
-              ) : memories?.length === 0 ? (
+              ) : reminders?.length === 0 ? (
                 <div className="text-center py-12">
-                  <Clock className="h-16 w-16 mx-auto mb-4 text-neutral-300" />
-                  <h3 className="text-lg font-medium text-neutral-600 mb-2">No memories yet</h3>
+                  <Calendar className="h-16 w-16 mx-auto mb-4 text-neutral-300" />
+                  <h3 className="text-lg font-medium text-neutral-600 mb-2">No reminders yet</h3>
                   <p className="text-neutral-500 mb-4">
-                    Start capturing meaningful moments with the people you care about
+                    Set up reminders for birthdays, anniversaries, and other important dates
                   </p>
-                  <Button onClick={() => setShowAddMemory(true)}>
+                  <Button onClick={() => setShowAddReminder(true)}>
                     <Plus className="h-4 w-4 mr-2" />
-                    Add Your First Memory
+                    Add Your First Reminder
                   </Button>
                 </div>
               ) : (
                 <div className="text-center py-12">
                   <Search className="h-16 w-16 mx-auto mb-4 text-neutral-300" />
-                  <h3 className="text-lg font-medium text-neutral-600 mb-2">No matching memories found</h3>
+                  <h3 className="text-lg font-medium text-neutral-600 mb-2">No matching reminders found</h3>
                   <p className="text-neutral-500">
                     Try adjusting your search or filter criteria
                   </p>
@@ -223,9 +198,9 @@ export default function Timeline() {
         </Card>
       </div>
 
-      <AddMemoryModal 
-        open={showAddMemory} 
-        onOpenChange={setShowAddMemory}
+      <AddReminderModal 
+        open={showAddReminder} 
+        onOpenChange={setShowAddReminder}
       />
     </div>
   );
