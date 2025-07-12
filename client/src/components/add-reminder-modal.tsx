@@ -147,7 +147,7 @@ export function AddReminderModal({ open, onOpenChange, defaultPersonId }: AddRem
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[525px]">
+      <DialogContent className="sm:max-w-[525px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add Reminder</DialogTitle>
           <DialogDescription>
