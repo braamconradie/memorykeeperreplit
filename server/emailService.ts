@@ -36,7 +36,7 @@ class EmailService {
       host: config.host,
       port: config.port,
       secure: config.secure,
-      user: config.auth.user ? config.auth.user.substring(0, 3) + '***' + config.auth.user.slice(-10) : 'NOT_SET',
+      user: config.auth.user || 'NOT_SET',
       pass: config.auth.pass ? `***SET*** (${config.auth.pass.length} chars)` : 'NOT_SET'
     });
 
