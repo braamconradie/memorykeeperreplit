@@ -148,7 +148,13 @@ export class DatabaseStorage implements IStorage {
 
   // Memory operations
   async getMemories(userId: string, personId?: number, limit?: number): Promise<MemoryWithPerson[]> {
-    let query = db
+    let whereConditions = [eq(memories.userId, userId)];
+    
+    if (personId) {
+      whereConditions.push(eq(memories.personId, personId));
+    }
+
+    let baseQuery = db
       .select({
         id: memories.id,
         userId: memories.userId,
@@ -171,19 +177,15 @@ export class DatabaseStorage implements IStorage {
       })
       .from(memories)
       .leftJoin(people, eq(memories.personId, people.id))
-      .where(eq(memories.userId, userId));
+      .where(and(...whereConditions))
+      .orderBy(desc(memories.createdAt));
 
-    if (personId) {
-      query = query.where(and(eq(memories.userId, userId), eq(memories.personId, personId)));
-    }
-
-    query = query.orderBy(desc(memories.createdAt));
-
-    if (limit) {
-      query = query.limit(limit);
-    }
-
-    return await query;
+    const results = limit ? await baseQuery.limit(limit) : await baseQuery;
+    
+    return results.map(row => ({
+      ...row,
+      person: row.person && row.person.id ? row.person : undefined,
+    })) as MemoryWithPerson[];
   }
 
   async getMemoryById(id: number, userId: string): Promise<Memory | undefined> {
@@ -213,7 +215,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async searchMemories(userId: string, query: string): Promise<MemoryWithPerson[]> {
-    return await db
+    const results = await db
       .select({
         id: memories.id,
         userId: memories.userId,
@@ -243,11 +245,22 @@ export class DatabaseStorage implements IStorage {
         )
       )
       .orderBy(desc(memories.createdAt));
+    
+    return results.map(row => ({
+      ...row,
+      person: row.person && row.person.id ? row.person : undefined,
+    })) as MemoryWithPerson[];
   }
 
   // Reminder operations
   async getReminders(userId: string, personId?: number): Promise<ReminderWithPerson[]> {
-    let query = db
+    let whereConditions = [eq(reminders.userId, userId), eq(reminders.isActive, true)];
+    
+    if (personId) {
+      whereConditions.push(eq(reminders.personId, personId));
+    }
+
+    const results = await db
       .select({
         id: reminders.id,
         userId: reminders.userId,
@@ -275,21 +288,13 @@ export class DatabaseStorage implements IStorage {
       })
       .from(reminders)
       .leftJoin(people, eq(reminders.personId, people.id))
-      .where(and(eq(reminders.userId, userId), eq(reminders.isActive, true)));
+      .where(and(...whereConditions))
+      .orderBy(asc(reminders.reminderDate));
 
-    if (personId) {
-      query = query.where(
-        and(
-          eq(reminders.userId, userId),
-          eq(reminders.personId, personId),
-          eq(reminders.isActive, true)
-        )
-      );
-    }
-
-    query = query.orderBy(asc(reminders.reminderDate));
-
-    return await query;
+    return results.map(row => ({
+      ...row,
+      person: row.person && row.person.id ? row.person : undefined,
+    })) as ReminderWithPerson[];
   }
 
   async getUpcomingReminders(userId: string, days: number): Promise<ReminderWithPerson[]> {
@@ -297,7 +302,7 @@ export class DatabaseStorage implements IStorage {
     const futureDate = new Date();
     futureDate.setDate(today.getDate() + days);
 
-    return await db
+    const results = await db
       .select({
         id: reminders.id,
         userId: reminders.userId,
@@ -334,6 +339,11 @@ export class DatabaseStorage implements IStorage {
         )
       )
       .orderBy(asc(reminders.reminderDate));
+    
+    return results.map(row => ({
+      ...row,
+      person: row.person && row.person.id ? row.person : undefined,
+    })) as ReminderWithPerson[];
   }
 
   async getReminderById(id: number, userId: string): Promise<Reminder | undefined> {
@@ -365,7 +375,7 @@ export class DatabaseStorage implements IStorage {
   async getDueReminders(): Promise<ReminderWithPerson[]> {
     const today = new Date().toISOString().split('T')[0];
     
-    return await db
+    const results = await db
       .select({
         id: reminders.id,
         userId: reminders.userId,
@@ -400,6 +410,11 @@ export class DatabaseStorage implements IStorage {
         )
       )
       .orderBy(asc(reminders.reminderDate));
+    
+    return results.map(row => ({
+      ...row,
+      person: row.person && row.person.id ? row.person : undefined,
+    })) as ReminderWithPerson[];
   }
 
   // Email notification operations

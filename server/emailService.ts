@@ -26,7 +26,7 @@ class EmailService {
       },
     };
 
-    this.transporter = nodemailer.createTransporter(config);
+    this.transporter = nodemailer.createTransport(config);
   }
 
   async sendReminderEmail(user: User, reminder: ReminderWithPerson): Promise<void> {
