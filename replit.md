@@ -10,6 +10,13 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+### Birthday Reminder Advance Notice (July 12, 2025)
+- Added optional advance notice field to person creation form
+- Users can choose: same day, 1-2 days, 3 days, 1 week, 2 weeks, or 1 month advance notice
+- Defaults to "on the day" for users who prefer immediate reminders
+- Updated backend to use selected advance notice value when creating birthday reminders
+- Form clearly shows field as optional with user-friendly descriptions
+
 ### Delete Person Functionality (July 12, 2025)
 - Added comprehensive delete person functionality with confirmation dialog
 - Implemented dropdown menu with Edit and Delete options on person cards

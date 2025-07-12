@@ -67,7 +67,7 @@ export function AddPersonModal({ open, onOpenChange }: AddPersonModalProps) {
     defaultValues: {
       fullName: "",
       relationship: "",
-      birthdayAdvanceDays: 3,
+      birthdayAdvanceDays: 0,
       notes: "",
     },
   });
@@ -260,11 +260,11 @@ export function AddPersonModal({ open, onOpenChange }: AddPersonModalProps) {
               name="birthdayAdvanceDays"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Birthday Reminder Advance Notice</FormLabel>
-                  <Select onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)} defaultValue={field.value?.toString()}>
+                  <FormLabel>Birthday Reminder Advance Notice (optional)</FormLabel>
+                  <Select onValueChange={(value) => field.onChange(value ? parseInt(value) : 0)} defaultValue={field.value?.toString() || "0"}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select advance notice" />
+                        <SelectValue placeholder="On the day" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -278,7 +278,7 @@ export function AddPersonModal({ open, onOpenChange }: AddPersonModalProps) {
                     </SelectContent>
                   </Select>
                   <FormDescription>
-                    How many days before the birthday should you receive reminder emails?
+                    When should you receive reminder emails? Defaults to on the day.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
