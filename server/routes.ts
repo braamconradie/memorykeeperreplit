@@ -325,8 +325,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/test-reminders', isAuthenticated, async (req: any, res) => {
     try {
       console.log("Manual test of reminder system triggered");
+      
+      // First check if SMTP is configured
+      const hasSmtpConfig = process.env.SMTP_USER && process.env.SMTP_PASS;
+      if (!hasSmtpConfig) {
+        console.log("❌ SMTP credentials not configured - cannot send emails");
+        return res.json({ 
+          message: "SMTP credentials not configured. Please set up SMTP_USER, SMTP_PASS, and other email settings.",
+          configured: false 
+        });
+      }
+      
       await cronJobService.testReminders();
-      res.json({ message: "Reminder test completed. Check server logs for details." });
+      res.json({ message: "Reminder test completed. Check server logs for details.", configured: true });
     } catch (error) {
       console.error("Error testing reminders:", error);
       res.status(500).json({ message: "Failed to test reminder system" });
