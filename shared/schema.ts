@@ -66,10 +66,11 @@ export const reminders = pgTable("reminders", {
   id: serial("id").primaryKey(),
   userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   personId: integer("person_id").references(() => people.id, { onDelete: "cascade" }),
-  type: text("type").notNull(), // 'birthday' or 'custom'
+  type: text("type").notNull(), // 'birthday', 'anniversary', or 'custom'
   title: text("title").notNull(),
   description: text("description"),
   reminderDate: date("reminder_date").notNull(),
+  anniversaryYear: integer("anniversary_year"), // Year of anniversary (e.g., wedding year)
   advanceDays: integer("advance_days").default(0),
   isRecurring: boolean("is_recurring").default(false),
   isActive: boolean("is_active").default(true),

@@ -48,6 +48,7 @@ const editReminderSchema = z.object({
   reminderDate: z.date({
     required_error: "Please select a date",
   }),
+  anniversaryYear: z.number().min(1900).max(new Date().getFullYear()).optional(),
   advanceDays: z.number().min(0).max(30).optional(),
   isRecurring: z.boolean().optional(),
 });
@@ -63,6 +64,7 @@ interface EditReminderModalProps {
     title: string;
     description?: string;
     reminderDate: string;
+    anniversaryYear?: number;
     advanceDays?: number;
     isRecurring?: boolean;
     person?: {
@@ -89,6 +91,7 @@ export function EditReminderModal({ open, onOpenChange, reminder }: EditReminder
         const [year, month, day] = reminder.reminderDate.split('-').map(Number);
         return new Date(year, month - 1, day);
       })(),
+      anniversaryYear: reminder.anniversaryYear || undefined,
       advanceDays: reminder.advanceDays || 0,
       isRecurring: reminder.isRecurring || false,
     },
@@ -122,6 +125,7 @@ export function EditReminderModal({ open, onOpenChange, reminder }: EditReminder
         title: data.title,
         description: data.description,
         reminderDate: localDateString,
+        anniversaryYear: data.anniversaryYear,
         advanceDays: data.advanceDays,
         isRecurring: data.isRecurring,
       };
@@ -296,6 +300,32 @@ export function EditReminderModal({ open, onOpenChange, reminder }: EditReminder
                 </FormItem>
               )}
             />
+
+            {form.watch("type") === "anniversary" && (
+              <FormField
+                control={form.control}
+                name="anniversaryYear"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Anniversary Year (optional)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min="1900"
+                        max={new Date().getFullYear()}
+                        placeholder="e.g., 2010"
+                        {...field}
+                        onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Enter the year of the anniversary (e.g., wedding year) to calculate years since.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             <FormField
               control={form.control}

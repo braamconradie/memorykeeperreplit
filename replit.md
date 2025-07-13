@@ -10,6 +10,15 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+### Anniversary Year Feature Added (July 12, 2025)
+- Added anniversary year field to reminders for tracking wedding anniversaries and other yearly celebrations
+- Similar to birthday year functionality, users can now specify the year of an anniversary (e.g., wedding year)
+- System automatically calculates and displays years since the anniversary (e.g., "15 years since 2010")
+- Field appears only when "Anniversary" reminder type is selected
+- Added to both add reminder and edit reminder modals with proper validation
+- Database schema updated with anniversary_year column in reminders table
+- Users can now track meaningful anniversaries with proper year calculation
+
 ### Birthday Reminder Advance Notice (July 12, 2025)
 - Added optional advance notice field to person creation form
 - Users can choose: same day, 1-2 days, 3 days, 1 week, 2 weeks, or 1 month advance notice

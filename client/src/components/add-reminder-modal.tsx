@@ -47,6 +47,7 @@ const reminderSchema = z.object({
   reminderDate: z.date({
     required_error: "Please select a date",
   }),
+  anniversaryYear: z.number().min(1900).max(new Date().getFullYear()).optional(),
   advanceDays: z.number().min(0).max(30).optional(),
   isRecurring: z.boolean().optional(),
 });
@@ -70,6 +71,7 @@ export function AddReminderModal({ open, onOpenChange, defaultPersonId }: AddRem
       type: "custom",
       description: "",
       reminderDate: undefined,
+      anniversaryYear: undefined,
       advanceDays: 0,
       isRecurring: false,
     },
@@ -274,6 +276,32 @@ export function AddReminderModal({ open, onOpenChange, defaultPersonId }: AddRem
                 </FormItem>
               )}
             />
+
+            {form.watch("type") === "anniversary" && (
+              <FormField
+                control={form.control}
+                name="anniversaryYear"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Anniversary Year (optional)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min="1900"
+                        max={new Date().getFullYear()}
+                        placeholder="e.g., 2010"
+                        {...field}
+                        onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Enter the year of the anniversary (e.g., wedding year) to calculate years since.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             <FormField
               control={form.control}

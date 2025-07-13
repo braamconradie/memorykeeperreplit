@@ -16,6 +16,7 @@ interface ReminderCardProps {
     title: string;
     description?: string;
     reminderDate: string;
+    anniversaryYear?: number;
     advanceDays?: number;
     isRecurring?: boolean;
     person?: {
@@ -172,6 +173,11 @@ export function ReminderCard({ reminder, priority = 'medium' }: ReminderCardProp
                 {reminder.advanceDays && reminder.advanceDays > 0 && (
                   <p className="text-xs text-neutral-500 mt-1">
                     Remind me {reminder.advanceDays} days before
+                  </p>
+                )}
+                {reminder.type === "anniversary" && reminder.anniversaryYear && (
+                  <p className="text-xs text-neutral-500 mt-1">
+                    {new Date().getFullYear() - reminder.anniversaryYear} years since {reminder.anniversaryYear}
                   </p>
                 )}
               </div>
