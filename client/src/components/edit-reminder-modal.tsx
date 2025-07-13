@@ -84,7 +84,11 @@ export function EditReminderModal({ open, onOpenChange, reminder }: EditReminder
       type: reminder.type as "birthday" | "anniversary" | "custom",
       title: reminder.title,
       description: reminder.description || "",
-      reminderDate: new Date(reminder.reminderDate),
+      reminderDate: (() => {
+        // Parse date string as local date to avoid timezone issues
+        const [year, month, day] = reminder.reminderDate.split('-').map(Number);
+        return new Date(year, month - 1, day);
+      })(),
       advanceDays: reminder.advanceDays || 0,
       isRecurring: reminder.isRecurring || false,
     },
@@ -106,12 +110,18 @@ export function EditReminderModal({ open, onOpenChange, reminder }: EditReminder
 
   const updateReminderMutation = useMutation({
     mutationFn: async (data: EditReminderFormData) => {
+      // Format date as local date string to avoid timezone issues
+      const year = data.reminderDate.getFullYear();
+      const month = String(data.reminderDate.getMonth() + 1).padStart(2, '0');
+      const day = String(data.reminderDate.getDate()).padStart(2, '0');
+      const localDateString = `${year}-${month}-${day}`;
+      
       const reminderData = {
         personId: data.personId,
         type: data.type,
         title: data.title,
         description: data.description,
-        reminderDate: data.reminderDate.toISOString().split('T')[0],
+        reminderDate: localDateString,
         advanceDays: data.advanceDays,
         isRecurring: data.isRecurring,
       };

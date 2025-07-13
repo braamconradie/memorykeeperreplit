@@ -104,10 +104,16 @@ export function AddReminderModal({ open, onOpenChange, defaultPersonId }: AddRem
         title = `${personName} - Custom Event`;
       }
       
+      // Format date as local date string to avoid timezone issues
+      const year = data.reminderDate.getFullYear();
+      const month = String(data.reminderDate.getMonth() + 1).padStart(2, '0');
+      const day = String(data.reminderDate.getDate()).padStart(2, '0');
+      const localDateString = `${year}-${month}-${day}`;
+      
       const reminderData = {
         ...data,
         title,
-        reminderDate: data.reminderDate.toISOString().split('T')[0],
+        reminderDate: localDateString,
       };
       await apiRequest('POST', '/api/reminders', reminderData);
     },
