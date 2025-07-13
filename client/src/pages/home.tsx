@@ -233,7 +233,7 @@ export default function Home() {
                 >
                   <span className="flex items-center">
                     <Calendar className="h-4 w-4 mr-3" />
-                    Search Reminders
+                    Search/Edit Reminders
                   </span>
                   <ArrowRight className="h-4 w-4" />
                 </Button>
