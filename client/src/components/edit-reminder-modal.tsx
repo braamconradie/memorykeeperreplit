@@ -292,7 +292,7 @@ export function EditReminderModal({ open, onOpenChange, reminder }: EditReminder
               name="advanceDays"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Advance Notice (days)</FormLabel>
+                  <FormLabel>Advance Notice (optional)</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -304,7 +304,7 @@ export function EditReminderModal({ open, onOpenChange, reminder }: EditReminder
                     />
                   </FormControl>
                   <FormDescription>
-                    How many days before the event to send the reminder
+                    If you wish to receive an additional optional advanced reminder, select the number of days.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
