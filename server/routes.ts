@@ -103,22 +103,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       const person = await storage.createPerson(personData);
-      
-      // Create birthday reminder if birth date is provided
-      if (person.birthDate) {
-        await storage.createReminder({
-          userId,
-          personId: person.id,
-          type: 'birthday',
-          title: `${person.fullName}'s Birthday`,
-          description: `Birthday reminder for ${person.fullName}`,
-          reminderDate: person.birthDate,
-          advanceDays: req.body.birthdayAdvanceDays ?? 1, // Use provided value or default to 1 day before
-          isRecurring: true,
-          isActive: true,
-        });
-      }
-      
       res.json(person);
     } catch (error) {
       console.error("Error creating person:", error);

@@ -19,6 +19,15 @@ Preferred communication style: Simple, everyday language.
 - Database schema updated with anniversary_year column in reminders table
 - Users can now track meaningful anniversaries with proper year calculation
 
+### Add Person Form Simplification (July 13, 2025)
+- Simplified the add person form to focus on essential information only
+- Removed birthday fields and birthday reminder creation from the initial person creation step
+- Added clear guidance message prompting users to use "Add Reminder" for birthday, anniversary, or event reminders
+- Separated concerns: person creation is now independent of reminder setup
+- Updated success message to guide users to the next step of adding reminders
+- Backend no longer automatically creates birthday reminders when adding a person
+- Streamlined workflow improves user experience by reducing form complexity
+
 ### Birthday Reminder Advance Notice (July 12, 2025)
 - Added optional advance notice field to person creation form
 - Users can choose: same day, 1-2 days, 3 days, 1 week, 2 weeks, or 1 month advance notice

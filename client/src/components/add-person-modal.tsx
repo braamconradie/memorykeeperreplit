@@ -35,20 +35,7 @@ import { Textarea } from "@/components/ui/textarea";
 const personSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
   relationship: z.string().min(1, "Relationship is required"),
-  birthDay: z.number().min(1).max(31).optional(),
-  birthMonth: z.number().min(1).max(12).optional(),
-  birthYear: z.number().min(1900).max(new Date().getFullYear()).optional(),
-  birthdayAdvanceDays: z.number().min(0).max(30).optional(),
   notes: z.string().optional(),
-}).refine((data) => {
-  // If either day or month is provided, both must be provided
-  if (data.birthDay !== undefined || data.birthMonth !== undefined) {
-    return data.birthDay !== undefined && data.birthMonth !== undefined;
-  }
-  return true;
-}, {
-  message: "Both day and month are required for birthday",
-  path: ["birthDay"],
 });
 
 type PersonFormData = z.infer<typeof personSchema>;
@@ -67,7 +54,6 @@ export function AddPersonModal({ open, onOpenChange }: AddPersonModalProps) {
     defaultValues: {
       fullName: "",
       relationship: "",
-      birthdayAdvanceDays: 1,
       notes: "",
     },
   });
@@ -77,11 +63,6 @@ export function AddPersonModal({ open, onOpenChange }: AddPersonModalProps) {
       const personData = {
         fullName: data.fullName,
         relationship: data.relationship,
-        birthDate: data.birthDay && data.birthMonth ? 
-          `${data.birthYear || 2000}-${data.birthMonth.toString().padStart(2, '0')}-${data.birthDay.toString().padStart(2, '0')}` : 
-          undefined,
-        birthYear: data.birthYear,
-        birthdayAdvanceDays: data.birthdayAdvanceDays,
         notes: data.notes,
       };
       await apiRequest('POST', '/api/people', personData);
@@ -91,7 +72,7 @@ export function AddPersonModal({ open, onOpenChange }: AddPersonModalProps) {
       queryClient.invalidateQueries({ queryKey: ['/api/stats'] });
       toast({
         title: "Person added",
-        description: "The person has been successfully added to your network.",
+        description: "Person added successfully! Next, go to 'Add Reminder' to set up birthday, anniversary, or event reminders.",
       });
       onOpenChange(false);
       form.reset();
@@ -163,127 +144,9 @@ export function AddPersonModal({ open, onOpenChange }: AddPersonModalProps) {
               )}
             />
 
-            <div className="space-y-4">
-              <FormLabel>Birthday</FormLabel>
-              <div className="grid grid-cols-3 gap-4">
-                <FormField
-                  control={form.control}
-                  name="birthDay"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Day</FormLabel>
-                      <Select onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Day" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
-                            <SelectItem key={day} value={day.toString()}>
-                              {day}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
 
-                <FormField
-                  control={form.control}
-                  name="birthMonth"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Month</FormLabel>
-                      <Select onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Month" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {[
-                            { value: 1, label: "January" },
-                            { value: 2, label: "February" },
-                            { value: 3, label: "March" },
-                            { value: 4, label: "April" },
-                            { value: 5, label: "May" },
-                            { value: 6, label: "June" },
-                            { value: 7, label: "July" },
-                            { value: 8, label: "August" },
-                            { value: 9, label: "September" },
-                            { value: 10, label: "October" },
-                            { value: 11, label: "November" },
-                            { value: 12, label: "December" },
-                          ].map((month) => (
-                            <SelectItem key={month.value} value={month.value.toString()}>
-                              {month.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
 
-                <FormField
-                  control={form.control}
-                  name="birthYear"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Year (optional)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          min="1900"
-                          max={new Date().getFullYear()}
-                          placeholder="e.g., 1990"
-                          {...field}
-                          onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <FormDescription>
-                Day and month are required for birthday reminders. Year is optional and used to calculate age.
-              </FormDescription>
-            </div>
 
-            <FormField
-              control={form.control}
-              name="birthdayAdvanceDays"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Birthday Reminder Advance Notice (optional)</FormLabel>
-                  <Select onValueChange={(value) => field.onChange(value ? parseInt(value) : 1)} defaultValue={field.value?.toString() || "1"}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="1 day before" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="0">On the day</SelectItem>
-                      <SelectItem value="1">1 day before</SelectItem>
-                      <SelectItem value="2">2 days before</SelectItem>
-                      <SelectItem value="3">3 days before</SelectItem>
-                      <SelectItem value="7">1 week before</SelectItem>
-                      <SelectItem value="14">2 weeks before</SelectItem>
-                      <SelectItem value="30">1 month before</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormDescription>
-                    If you wish to receive an additional optional advanced reminder, select the number of days.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
             <FormField
               control={form.control}
@@ -305,6 +168,20 @@ export function AddPersonModal({ open, onOpenChange }: AddPersonModalProps) {
                 </FormItem>
               )}
             />
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
+              <div className="flex items-start">
+                <div className="flex-shrink-0">
+                  <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <p className="font-medium">Next Step</p>
+                  <p className="mt-1">After adding this person, use the "Add Reminder" button to set up birthday, anniversary, or event reminders.</p>
+                </div>
+              </div>
+            </div>
 
             <div className="flex justify-end space-x-2 pt-4">
               <Button
