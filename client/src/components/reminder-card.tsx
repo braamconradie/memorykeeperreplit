@@ -157,8 +157,13 @@ export function ReminderCard({ reminder, priority = 'medium' }: ReminderCardProp
                   <Badge variant={daysInfo.variant}>{daysInfo.text}</Badge>
                 </div>
                 <p className="text-sm text-neutral-600 mt-1">
-                  {reminder.description || formatDate(reminder.reminderDate)}
+                  {reminder.description ? reminder.description : formatDate(reminder.reminderDate)}
                 </p>
+                {reminder.description && (
+                  <p className="text-xs text-neutral-500 mt-1">
+                    {formatDate(reminder.reminderDate)}
+                  </p>
+                )}
                 {reminder.person && (
                   <p className="text-xs text-neutral-500 mt-1">
                     {reminder.person.fullName} • {reminder.person.relationship}
